@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Articles | DevBlog</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+body { font-family: 'Inter', sans-serif; }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+<!-- Navbar -->
+<nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold"><a href="index.html">D</a></div>
+                <span class="text-xl font-bold tracking-tight text-slate-800"><a href="index.html">Dev<span class="text-blue-600">Blog</a></span></span>
+            </div>
+            <div class="hidden md:flex space-x-8 items-center">
+                <a href="index.html" class="text-slate-600 hover:text-blue-600 font-medium transition">Home</a>
+                <a href="article.html" class="text-slate-600 hover:text-blue-600 font-medium transition">Articles</a>
+                <a href="course.html" class="text-slate-600 hover:text-blue-600 font-medium transition">Courses</a>
+                <a href="#" class="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition shadow-md shadow-blue-200">Subscribe</a>
+            </div>
+            <button id="mobile-menu-btn" class="md:hidden text-slate-600 focus:outline-none">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 py-4 space-y-3">
+        <a href="#" class="block text-slate-600 font-medium">Home</a>
+        <a href="article.html" class="block text-slate-600 font-medium">Articles</a>
+        <a href="#" class="block text-slate-600 font-medium">About</a>
+    </div>
+</nav>
+
+<!-- Header -->
+<header class="bg-slate-900 py-16 text-center text-white">
+<h1 class="text-4xl font-extrabold mb-4">All Articles</h1>
+<p class="text-slate-300 max-w-2xl mx-auto">Browse all blog posts and tutorials. Click on any post to read in detail.</p>
+</header>
+
+<!-- Main content -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid lg:grid-cols-12 gap-12">
+
+        <!-- Blog posts -->
+        <div class="lg:col-span-8 space-y-12">
+            <div id="blog-container" class="grid md:grid-cols-2 gap-8">
+                <!-- Posts will render here from JS -->
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-4 space-y-10">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 class="font-bold text-slate-800 mb-4">Search Content</h3>
+                <div class="relative">
+                    <input type="text" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 pl-4 pr-10 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Find a tutorial...">
+                    <i class="fa-solid fa-magnifying-glass absolute right-3 top-3.5 text-slate-400"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 class="font-bold text-slate-800 mb-4">Popular Tags</h3>
+                <div class="flex flex-wrap gap-2">
+                    <a href="#" class="px-3 py-1 bg-slate-100 text-slate-600 rounded-md text-sm hover:bg-blue-600 hover:text-white transition">#React</a>
+                    <a href="#" class="px-3 py-1 bg-slate-100 text-slate-600 rounded-md text-sm hover:bg-blue-600 hover:text-white transition">#Tailwind</a>
+                    <a href="#" class="px-3 py-1 bg-slate-100 text-slate-600 rounded-md text-sm hover:bg-blue-600 hover:text-white transition">#Python</a>
+                    <a href="#" class="px-3 py-1 bg-slate-100 text-slate-600 rounded-md text-sm hover:bg-blue-600 hover:text-white transition">#CSS</a>
+                    <a href="#" class="px-3 py-1 bg-slate-100 text-slate-600 rounded-md text-sm hover:bg-blue-600 hover:text-white transition">#Cloud</a>
+                </div>
+            </div>
+
+            <div class="bg-blue-600 p-8 rounded-2xl text-white shadow-lg shadow-blue-200">
+                <h3 class="text-xl font-bold mb-2">Weekly Newsletter</h3>
+                <p class="text-blue-100 text-sm mb-6">Get curated web development resources directly in your inbox.</p>
+                <button class="w-full bg-white text-blue-600 font-bold py-3 rounded-lg hover:bg-blue-50 transition">Sign Up Free</button>
+            </div>
+        </aside>
+
+    </div>
+</main>
+
+<!-- Modal for full post -->
+<div id="postModal" class="fixed inset-0 z-[100] hidden bg-slate-900/80 backdrop-blur-sm overflow-y-auto px-4 py-6 transition-opacity duration-300">
+    <div class="relative max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
+        <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center text-slate-800 hover:bg-red-500 hover:text-white transition shadow-lg">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div id="modalBody" class="p-0"></div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-slate-900 text-slate-400 py-16">
+    <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-12">
+        <div>
+            <div class="flex items-center gap-2 mb-6">
+                <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-xs">D</div>
+                <span class="text-lg font-bold text-white tracking-tight">DevBlog</span>
+            </div>
+            <p class="text-sm leading-relaxed">Dedicated to providing the highest quality technical education for modern developers around the world.</p>
+        </div>
+        <div>
+            <h4 class="text-white font-bold mb-6">Resources</h4>
+            <ul class="space-y-4 text-sm">
+                <li><a href="#" class="hover:text-blue-400">Documentation</a></li>
+                <li><a href="#" class="hover:text-blue-400">Cheat Sheets</a></li>
+                <li><a href="#" class="hover:text-blue-400">Project Ideas</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="text-white font-bold mb-6">Legal</h4>
+            <ul class="space-y-4 text-sm">
+                <li><a href="#" class="hover:text-blue-400">Privacy Policy</a></li>
+                <li><a href="#" class="hover:text-blue-400">Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="max-w-7xl mx-auto mt-20 px-4 pt-4 border-t border-slate-800 text-center text-xs">
+        © 2026 By Jack. Hand-coded with Tailwind CSS.
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script>
+    // Mobile Menu Toggle
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+    // Posts data
+    const posts = [
+    {id:1, category:"Frontend", color:"blue", title:"Mastering Tailwind CSS Grid", desc:"Learn complex layouts with Tailwind.", fullContent:"Full Tailwind CSS tutorial content...", img:"https://picsum.photos/id/1/800/500", author:"Jakariya Jack", date:"Mar 12, 2026"},
+    {id:2, category:"Backend", color:"green", title:"Django REST API Guide", desc:"Build scalable APIs.", fullContent:"Full Django REST tutorial content...", img:"https://picsum.photos/id/2/800/500", author:"Jack", date:"Mar 13, 2026"},
+    {id:3, category:"Frontend", color:"blue", title:"React Hooks in Depth", desc:"Master React hooks.", fullContent:"Full React hooks tutorial...", img:"https://picsum.photos/id/3/800/500", author:"Alice", date:"Mar 14, 2026"},
+    {id:4, category:"Backend", color:"green", title:"Python Web Development", desc:"Backend with Python.", fullContent:"Full Python backend tutorial...", img:"https://picsum.photos/id/4/800/500", author:"Bob", date:"Mar 15, 2026"},
+    {id:5, category:"Frontend", color:"blue", title:"CSS Animations Guide", desc:"Animate with CSS.", fullContent:"Full CSS animations tutorial...", img:"https://picsum.photos/id/5/800/500", author:"Clara", date:"Mar 16, 2026"},
+    {id:6, category:"Backend", color:"green", title:"Full Stack Tips", desc:"Best practices for full-stack.", fullContent:"Full stack guide content...", img:"https://picsum.photos/id/6/800/500", author:"David", date:"Mar 17, 2026"},
+    {id:7, category:"Frontend", color:"blue", title:"React Router Deep Dive", desc:"Routing in React.", fullContent:"Full React Router content...", img:"https://picsum.photos/id/7/800/500", author:"Emma", date:"Mar 18, 2026"},
+    {id:8, category:"Backend", color:"green", title:"Django Admin Tips", desc:"Admin tricks.", fullContent:"Full Django Admin content...", img:"https://picsum.photos/id/8/800/500", author:"Frank", date:"Mar 18, 2026"},
+    {id:9, category:"Frontend", color:"blue", title:"JavaScript ES2026 Features", desc:"Modern JS features.", fullContent:"Full ES2026 tutorial...", img:"https://picsum.photos/id/9/800/500", author:"Grace", date:"Mar 19, 2026"},
+    {id:10, category:"Backend", color:"green", title:"Node.js Express Guide", desc:"Building server-side apps.", fullContent:"Full Node.js Express content...", img:"https://picsum.photos/id/10/800/500", author:"Henry", date:"Mar 19, 2026"},
+    {id:11, category:"Frontend", color:"blue", title:"Advanced CSS Grid", desc:"Complex layouts with CSS.", fullContent:"Full CSS Grid tutorial...", img:"https://picsum.photos/id/11/800/500", author:"Irene", date:"Mar 20, 2026"},
+    {id:12, category:"Backend", color:"green", title:"REST API Security", desc:"Protect your APIs.", fullContent:"Full API security content...", img:"https://picsum.photos/id/12/800/500", author:"Jack", date:"Mar 20, 2026"},
+    {id:13, category:"Frontend", color:"blue", title:"Vue.js Composition API", desc:"Reactive Vue patterns.", fullContent:"Full Vue.js tutorial...", img:"https://picsum.photos/id/13/800/500", author:"Karen", date:"Mar 21, 2026"},
+    {id:14, category:"Backend", color:"green", title:"Django ORM Tips", desc:"Efficient queries.", fullContent:"Full Django ORM content...", img:"https://picsum.photos/id/14/800/500", author:"Leo", date:"Mar 21, 2026"},
+    {id:15, category:"Frontend", color:"blue", title:"Next.js for Beginners", desc:"React SSR guide.", fullContent:"Full Next.js tutorial...", img:"https://picsum.photos/id/15/800/500", author:"Mona", date:"Mar 22, 2026"},
+    {id:16, category:"Backend", color:"green", title:"Flask API Guide", desc:"Lightweight Python backend.", fullContent:"Full Flask API content...", img:"https://picsum.photos/id/16/800/500", author:"Nick", date:"Mar 22, 2026"},
+    {id:17, category:"Frontend", color:"blue", title:"Sass & SCSS Mastery", desc:"CSS preprocessing.", fullContent:"Full Sass tutorial...", img:"https://picsum.photos/id/17/800/500", author:"Olivia", date:"Mar 23, 2026"},
+    {id:18, category:"Backend", color:"green", title:"PostgreSQL Performance Tips", desc:"Database optimization.", fullContent:"Full PostgreSQL content...", img:"https://picsum.photos/id/18/800/500", author:"Paul", date:"Mar 23, 2026"},
+    {id:19, category:"Frontend", color:"blue", title:"Responsive Web Design", desc:"Mobile-first layouts.", fullContent:"Full responsive design tutorial...", img:"https://picsum.photos/id/19/800/500", author:"Quincy", date:"Mar 24, 2026"},
+    {id:20, category:"Backend", color:"green", title:"Docker for Developers", desc:"Containerization basics.", fullContent:"Full Docker tutorial...", img:"https://picsum.photos/id/20/800/500", author:"Rachel", date:"Mar 24, 2026"}
+];
+
+    // Render posts
+    const container = document.getElementById('blog-container');
+    posts.forEach(post => {
+        const cardHTML = `
+            <article class="group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
+                <div class="aspect-video overflow-hidden">
+                    <img src="${post.img}" alt="${post.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-6">
+                    <span class="px-2 py-1 bg-${post.color}-50 text-${post.color}-600 text-[10px] font-bold uppercase rounded">${post.category}</span>
+                    <h3 class="text-xl font-bold my-3 group-hover:text-blue-600 transition leading-tight">${post.title}</h3>
+                    <p class="text-slate-600 text-sm mb-6 line-clamp-2">${post.desc}</p>
+                    <button onclick="openModal(${post.id})" class="text-blue-600 font-bold text-sm inline-flex items-center gap-1 hover:underline">Read Post <i class="fa-solid fa-arrow-right text-[10px]"></i></button>
+                </div>
+            </article>
+        `;
+        container.innerHTML += cardHTML;
+    });
+
+    // Modal functions
+    const modal = document.getElementById('postModal');
+    const modalBody = document.getElementById('modalBody');
+
+    function openModal(id) {
+        const post = posts.find(p => p.id === id);
+        if(!post) return;
+        modalBody.innerHTML = `
+            <img src="${post.img}" class="w-full h-72 object-cover" alt="Banner">
+            <div class="p-8 md:p-12">
+                <div class="flex items-center gap-2 mb-4 text-xs font-bold text-blue-600 uppercase">
+                    <span>${post.category}</span> • <span>${post.date}</span>
+                </div>
+                <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">${post.title}</h2>
+                <div class="flex items-center gap-3 mb-8 pb-8 border-b border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600">${post.author[0]}</div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-900">${post.author}</p>
+                        <p class="text-xs text-slate-500 font-medium italic">Professional Developer</p>
+                    </div>
+                </div>
+                <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed text-lg">${post.fullContent}</div>
+            </div>
+        `;
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    window.addEventListener('click', function(e){
+        if(e.target === modal) closeModal();
+    });
+    window.addEventListener('keydown', function(e){
+        if(e.key === "Escape") closeModal();
+    });
+</script>
+
+</body>
+</html>

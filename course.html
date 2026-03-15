@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Courses | DevBlog</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+body { font-family: 'Inter', sans-serif; }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- Navbar -->
+    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold"><a href="index.html">D</a></div>
+            <span class="text-xl font-bold tracking-tight text-slate-800"><a href="index.html">Dev<span class="text-blue-600">Blog</span></a></span>
+        </div>
+        <div class="hidden md:flex space-x-8 items-center">
+            <a href="index.html" class="text-slate-600 hover:text-blue-600 font-medium transition">Home</a>
+            <a href="article.html" class="text-slate-600 hover:text-blue-600 font-medium transition">Articles</a>
+            <a href="course.html" class="text-slate-600 hover:text-blue-600 font-medium transition">Courses</a>
+            <a href="#" class="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition shadow-md shadow-blue-200">Subscribe</a>
+        </div>
+        <button id="mobile-menu-btn" class="md:hidden text-slate-600 focus:outline-none">
+            <i class="fa-solid fa-bars text-2xl"></i>
+        </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 py-4 space-y-3">
+        <a href="#" class="block text-slate-600 font-medium">Home</a>
+        <a href="article.html" class="block text-slate-600 font-medium">Articles</a>
+        <a href="#" class="block text-slate-600 font-medium">About</a>
+    </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-slate-900 py-16 text-center text-white">
+        <h1 class="text-4xl font-extrabold mb-4">Our Courses</h1>
+        <p class="text-slate-300 max-w-2xl mx-auto">Click "Enroll Now →" to add courses to your enrollment cart.</p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="courseContainer">
+        <!-- Course cards will render here -->
+        </div>
+
+    <div class="fixed bottom-4 right-4 z-50">
+        <button id="viewCartBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2">
+        <i class="fa-solid fa-cart-shopping"></i> View Cart (<span id="cartCount">0</span>)
+        </button>
+    </div>
+
+    <!-- Enrollment Cart Modal -->
+    <div id="cartModal" class="fixed inset-0 hidden bg-slate-900/80 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-lg relative">
+            <button onclick="closeCart()" class="absolute top-4 right-4 text-slate-700 hover:text-red-500">
+            <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-4">Enrollment Cart</h2>
+            <ul id="cartList" class="mb-6 space-y-3 text-slate-700"></ul>
+            <p id="totalPrice" class="text-slate-700 font-semibold mb-4"></p>
+            <a href="enroll.html" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg inline-block text-center">Proceed to Enroll</a>
+        </div>
+    </div>
+
+    <!-- Toast Message -->
+    <div id="toast" class="fixed inset-0 flex items-center justify-center pointer-events-none z-[999]">
+        <div class="bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg opacity-0 transition-opacity duration-300" id="toastMessage"></div>
+    </div>
+
+<script>
+const courses = [
+  { id:1, title:"Tailwind CSS Basics", desc:"Learn utility-first CSS and build responsive websites quickly.", img:"https://picsum.photos/id/1011/600/400", price: 20 },
+  { id:2, title:"Django for Beginners", desc:"Start building dynamic web apps with Python and Django.", img:"https://picsum.photos/id/1012/600/400", price: 25 },
+  { id:3, title:"React JS Essentials", desc:"Learn how to create interactive UI with React.", img:"https://picsum.photos/id/1013/600/400", price: 30 },
+  { id:4, title:"Python for Web", desc:"Master Python for backend development.", img:"https://picsum.photos/id/1014/600/400", price: 22 },
+  { id:5, title:"Full Stack Development", desc:"Learn frontend and backend to become a full-stack developer.", img:"https://picsum.photos/id/1015/600/400", price: 35 },
+  { id:6, title:"System Design 101", desc:"Understand modern system architecture and scalable design.", img:"https://picsum.photos/id/1016/600/400", price: 28 },
+];
+
+let cart = [];
+
+// Render courses
+const container = document.getElementById('courseContainer');
+courses.forEach(course => {
+  const card = document.createElement('div');
+  card.className = "bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition";
+  card.innerHTML = `
+    <img src="${course.img}" alt="${course.title}" class="w-full h-48 object-cover">
+    <div class="p-6">
+      <h3 class="text-xl font-bold mb-2">${course.title}</h3>
+      <p class="text-slate-600 text-sm mb-2">${course.desc}</p>
+      <p class="text-slate-700 font-semibold mb-4">$${course.price}</p>
+      <button class="text-blue-600 font-bold inline-flex items-center gap-1 hover:underline" onclick="addToCart(${course.id})">
+        Enroll Now <i class="fa-solid fa-arrow-right text-xs"></i>
+      </button>
+    </div>
+  `;
+  container.appendChild(card);
+});
+
+// Toast function
+function showToast(message){
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+    toastMessage.textContent = message;
+    toastMessage.classList.remove('opacity-0');
+    toastMessage.classList.add('opacity-100');
+    toast.classList.add('pointer-events-auto');
+
+    setTimeout(() => {
+        toastMessage.classList.remove('opacity-100');
+        toastMessage.classList.add('opacity-0');
+        toast.classList.remove('pointer-events-auto');
+    }, 2000);
+}
+
+// Cart Functions
+function addToCart(id){
+  const course = courses.find(c => c.id === id);
+  if(!cart.some(c => c.id === course.id)){
+    cart.push(course); // push whole object
+    updateCartUI();
+    showToast(`${course.title} added to cart!`);
+  } else {
+    showToast(`${course.title} is already in the cart.`);
+  }
+}
+
+function updateCartUI(){
+  document.getElementById('cartCount').textContent = cart.length;
+  const cartList = document.getElementById('cartList');
+  cartList.innerHTML = '';
+  let total = 0;
+  cart.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = `${item.title} - $${item.price}`;
+    cartList.appendChild(li);
+    total += item.price;
+  });
+
+  const totalPriceEl = document.getElementById('totalPrice');
+  totalPriceEl.textContent = `Total Price: $${total}`;
+  
+  localStorage.setItem('enrollCart', JSON.stringify(cart));
+}
+
+const viewCartBtn = document.getElementById('viewCartBtn');
+const cartModal = document.getElementById('cartModal');
+viewCartBtn.addEventListener('click', () => {
+  cartModal.classList.remove('hidden');
+  const savedCart = JSON.parse(localStorage.getItem('enrollCart') || "[]");
+  cart = savedCart;
+  updateCartUI();
+});
+
+function closeCart(){
+  cartModal.classList.add('hidden');
+}
+
+// Mobile Menu Toggle
+document.getElementById('mobile-menu-btn').addEventListener('click', ()=>{
+  document.getElementById('mobile-menu').classList.toggle('hidden');
+});
+</script>
+
+</body>
+</html>
