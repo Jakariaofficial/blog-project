@@ -13,6 +13,7 @@
 </head>
 <body class="bg-slate-50 text-slate-900">
 
+    <!-- Navbar -->
     <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
@@ -28,19 +29,22 @@
         </div>
     </nav>
 
+    <!-- Header -->
     <header class="bg-slate-900 py-16 text-center text-white">
         <h1 class="text-4xl font-extrabold mb-4">Complete Your Enrollment</h1>
         <p class="text-slate-400">Review your courses and complete the payment.</p>
     </header>
 
+    <!-- Main -->
     <main class="max-w-4xl mx-auto px-4 py-12 space-y-8">
-        
+        <!-- Selected Courses -->
         <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
             <h2 class="text-xl font-bold mb-4">Selected Courses</h2>
             <ul id="enrollCartList" class="space-y-3"></ul>
             <div id="totalPrice" class="mt-6 pt-4 border-t font-bold text-lg text-blue-600"></div>
         </div>
 
+        <!-- Payment Form -->
         <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
             <h2 class="text-xl font-bold mb-6">Payment Information</h2>
             <form id="enrollForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -72,18 +76,20 @@
         </div>
     </main>
 
-    <div id="toast" class="fixed bottom-10 left-0 right-0 flex justify-center pointer-events-none">
-        <div id="toastMessage" class="bg-slate-800 text-white px-6 py-3 rounded-full shadow-xl opacity-0 transition-opacity"></div>
-    </div>
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none p-4"></div>
 
+    <!-- Script -->
     <script>
         const cart = JSON.parse(localStorage.getItem('enrollCart') || "[]");
         const enrollCartList = document.getElementById('enrollCartList');
         const totalPriceEl = document.getElementById('totalPrice');
 
         function renderCart() {
+            enrollCartList.innerHTML = '';
             if(cart.length === 0) {
                 enrollCartList.innerHTML = '<li class="text-slate-400 italic">Cart is empty</li>';
+                totalPriceEl.textContent = '';
                 return;
             }
             let total = 0;
@@ -99,19 +105,45 @@
 
         renderCart();
 
-        function showToast(msg) {
-            const toast = document.getElementById('toastMessage');
-            toast.textContent = msg;
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100');
-            setTimeout(() => { toast.classList.remove('opacity-100'); toast.classList.add('opacity-0'); }, 3000);
-        }
+        // Updated toast function
+        // Updated square toast function
+function showPaymentToast(message) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `bg-green-600 text-white px-10 py-6 shadow-2xl pointer-events-auto transform transition-all duration-500 ease-out opacity-0 scale-75 flex flex-col items-center gap-3`;
 
+    toast.innerHTML = `
+        <div class="w-16 h-16 bg-white flex items-center justify-center text-green-600 text-3xl shadow-lg">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <span class="font-bold text-lg text-center">${message}</span>
+    `;
+
+    container.appendChild(toast);
+
+    // Show animation
+    setTimeout(() => {
+        toast.classList.remove('opacity-0', 'scale-75');
+    }, 10);
+
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+        toast.classList.add('opacity-0', 'scale-75');
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
+}
+
+        // Form submission
         document.getElementById('enrollForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            showToast("Payment processing successfully!");
-            setTimeout(() => window.location.href = "course.html", 2000);
+            const method = document.getElementById('paymentOption').value;
+            const code = document.getElementById('transactionCode').value;
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+            showPaymentToast(`Payment Method: ${method} | Txn: ${code} | Total: $${total}`);
+            setTimeout(() => window.location.href = "course.html", 3000);
         });
     </script>
+
 </body>
 </html>

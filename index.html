@@ -25,7 +25,33 @@ body { font-family: 'Inter', sans-serif; }
                 <a href="index.html" class="text-slate-600 hover:text-blue-600 font-medium transition">Home</a>
                 <a href="article.html" class="text-slate-600 hover:text-blue-600 font-medium transition">Articles</a>
                 <a href="course.html" class="text-slate-600 hover:text-blue-600 font-medium transition">Courses</a>
-                <a href="#" class="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition shadow-md shadow-blue-200">Subscribe</a>
+
+                <!--=======Subscribe Button ===========-->
+<div class="relative">
+    <!-- Subscribe button -->
+    <button id="subscribeBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full font-bold transition">
+        Subscribe
+    </button>
+
+    <!-- Hidden form (absolute, button bottom) -->
+    <div id="subscribeForm" class="absolute right-4 mt-4 w-70 overflow-hidden max-h-0 transition-[max-height] duration-500 ease-in-out z-50">
+        <div class="flex gap-2 bg-white p-3 rounded-lg shadow-md border border-blue-300">
+            <input id="subscribeEmail" type="email" placeholder="Enter your email"
+                class="flex-1 px-3 py-2 rounded-lg border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button id="subscribeSubmit" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg font-bold transition">
+                Submit
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+                
             </div>
 
             <button id="mobile-menu-btn" class="md:hidden text-slate-600 focus:outline-none">
@@ -113,6 +139,10 @@ body { font-family: 'Inter', sans-serif; }
         © 2026 By Jack. Hand-coded with Tailwind CSS.
     </div>
 </footer>
+<!--===========toast Message ========-->
+<!-- Toast container -->
+<div id="toastContainer" class="fixed top-1/2 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-3 items-center pointer-events-none"></div>
+
 
 <!-- Modal -->
 <div id="postModal" class="fixed inset-0 z-[100] hidden bg-slate-900/80 backdrop-blur-sm overflow-y-auto px-4 py-6 transition-opacity duration-300">
@@ -215,6 +245,71 @@ function closeModal(){
 window.onclick = e => { if(e.target==modal) closeModal(); };
 document.addEventListener("keydown", e => { if(e.key==="Escape") closeModal(); });
 </script>
+<!--==========Toast JS========-->
+<script>
+    const subscribeBtn = document.getElementById('subscribeBtn');
+const subscribeForm = document.getElementById('subscribeForm');
+const subscribeSubmit = document.getElementById('subscribeSubmit');
+const subscribeInput = document.getElementById('subscribeEmail');
+
+// Toggle form on button click
+subscribeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if(subscribeForm.style.maxHeight && subscribeForm.style.maxHeight !== "0px"){
+        hideForm();
+    } else {
+        showForm();
+    }
+});
+
+function showForm() {
+    subscribeForm.style.maxHeight = subscribeForm.scrollHeight + "px";
+}
+
+function hideForm() {
+    subscribeForm.style.maxHeight = "0px";
+    subscribeInput.value = ""; // Clear input
+}
+
+// Hide form on outside click
+document.body.addEventListener('click', (e) => {
+    if(!subscribeForm.contains(e.target) && e.target !== subscribeBtn){
+        hideForm();
+    }
+});
+
+// Submit email
+subscribeSubmit.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent body click
+    const email = subscribeInput.value.trim();
+
+    if(!email){
+        showToast("Please enter your email!", "error");
+        return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailRegex.test(email)){
+        showToast("Invalid email address!", "error");
+        return;
+    }
+
+    let subscribers = JSON.parse(localStorage.getItem('subscribers')) || [];
+    if(subscribers.includes(email)){
+        showToast("Already subscribed!", "error");
+        hideForm();
+        return;
+    }
+
+    subscribers.push(email);
+    localStorage.setItem('subscribers', JSON.stringify(subscribers));
+    showToast("Subscribed successfully! ✅", "success");
+
+    hideForm();
+});
+</script>
+
+<script src="./static/js/main.js"></script>
 
 </body>
 </html>
